@@ -11,7 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan("com.wemarklinks.apiserver.config,com.wemarklinks.apiserver.controller")
+@ComponentScan(basePackages = "com.wemarklinks.apiserver.config,"
+		+ "com.wemarklinks.apiserver.controller,"
+		+ "com.wemarklinks.factory.data.config,"
+		+ "com.wemarklinks.factory.data.service.impl")
 public class Application extends SpringBootServletInitializer {
 
     @Override
