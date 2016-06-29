@@ -21,4 +21,18 @@ public class CodeInfoService implements ICodeInfoService {
 		return null;
 	}
 
+	@Override
+	public CodeInfo getCodeInfoById(long code) {
+		return codeInfoMapper.selectByPrimaryKey(code);
+	}
+
+	@Override
+	public void insertCodeInfo(CodeInfo info) {
+		codeInfoMapper.insertSelective(info);
+	}
+
+	@Override
+	public void updateCodeInfo(CodeInfo info) {
+		codeInfoMapper.updateByPrimaryKeySelective(info);
+	}
 }
