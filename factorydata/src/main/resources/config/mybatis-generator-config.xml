@@ -7,11 +7,6 @@
 	<classPathEntry location="${mybatis.connection.location}" />
 
 	<context id="tables" targetRuntime="MyBatis3">
-		<plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
-			<property name="fileName" value="mybatis-config.xml" />
-			<property name="targetPackage" value="." />
-			<property name="targetProject" value="src/main/resources" />
-		</plugin>
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin">
 			<property name="suppressJavaInterface" value="false" />
 		</plugin>

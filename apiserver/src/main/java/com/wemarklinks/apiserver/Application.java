@@ -12,7 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = "com.wemarklinks.apiserver.config,"
+		+ "com.wemarklinks.apiserver.common,"
 		+ "com.wemarklinks.apiserver.controller,"
+		+ "com.wemarklinks.apiserver.filter,"
 		+ "com.wemarklinks.factory.data.config,"
 		+ "com.wemarklinks.factory.data.service.impl")
 public class Application extends SpringBootServletInitializer {
