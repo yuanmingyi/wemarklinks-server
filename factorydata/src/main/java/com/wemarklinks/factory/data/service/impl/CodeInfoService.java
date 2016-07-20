@@ -26,8 +26,11 @@ public class CodeInfoService implements ICodeInfoService {
 	}
 
 	@Override
-	public CodeInfo getCodeInfoById(long code) {
-		return codeInfoMapper.selectByPrimaryKey(code);
+	public CodeInfo getCodeInfoById(String category, String batch, String code) {
+		CodeInfoExample example = new CodeInfoExample();
+		example.createCriteria().andCategoryEqualTo(category).andBatchEqualTo(batch).andCodeEqualTo(code);
+		List<CodeInfo> codeInfoList = codeInfoMapper.selectByExample(example);
+		return codeInfoList.get(0);
 	}
 
 	@Override

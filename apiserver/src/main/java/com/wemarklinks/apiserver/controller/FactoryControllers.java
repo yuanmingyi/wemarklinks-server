@@ -11,6 +11,8 @@ import com.wemarklinks.factory.data.service.ICodeInfoService;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class FactoryControllers {
 
@@ -25,22 +27,43 @@ public class FactoryControllers {
 		return new ResponseEntity<String>(text, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{category}/{code}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{category}/{batch}/{code}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> consume(@PathVariable String category, @PathVariable int code, @RequestParam String location) {
-		CodeInfo info = codeInfoService.getCodeInfoById(code);
-		info.setDiscovered_loc(location);
-		info.setDiscovered_time(new Date(System.currentTimeMillis()));
-		codeInfoService.updateCodeInfo(info);
-		return new ResponseEntity<>(info, HttpStatus.OK);
+	public ResponseEntity<?> scan(HttpServletRequest request,
+			@PathVariable String category, @PathVariable String batch, @PathVariable String code,
+			@RequestParam(required=false) String action, @RequestParam(required=false) String location, @RequestParam(required=false) String userid, @RequestParam(required=false) String signature) {
+		CodeInfo info = codeInfoService.getCodeInfoById(category, batch, code);
+		if (info == null) {
+			return new ResponseEntity<>("code not found", HttpStatus.BAD_REQUEST);
+		}
+		if (action == null && location == null && userid == null && signature == null) {
+			String ip = request.getRemoteAddr();
+			info.setDiscovered_loc(ip2loc(ip));
+			info.setDiscovered_time(new Date(System.currentTimeMillis()));
+			codeInfoService.updateCodeInfo(info);			
+			return new ResponseEntity<String>("ok", HttpStatus.OK);
+		} else {
+			// specific scan
+			return new ResponseEntity<CodeInfo>(info, HttpStatus.OK);
+		}
 	}
 
-	@RequestMapping(value = "/scan", method = RequestMethod.POST)
+	@RequestMapping(value = "/{category}/{batch}/{code}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<?> scan(@RequestParam String code, @RequestBody CodeInfo info) {
-		info.setCode(code);
-		codeInfoService.insertCodeInfo(info);
+	public ResponseEntity<?> assign(@PathVariable String category, @PathVariable String batch, @PathVariable String code,
+			@RequestParam String location, @RequestParam String signature) {
+		CodeInfo info = codeInfoService.getCodeInfoById(category, batch, code);
+		if (info == null) {
+			return new ResponseEntity<>("code not found", HttpStatus.BAD_REQUEST);
+		}
+		info.setAssigned_time(new Date(System.currentTimeMillis()));
+		info.setTo_loc(location);
+		codeInfoService.updateCodeInfo(info);
 		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
+	private String ip2loc(String ip) {
+		return "sq";
 	}
 
 }
